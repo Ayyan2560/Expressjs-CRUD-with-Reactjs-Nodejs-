@@ -2,7 +2,7 @@ import express from "express"
 
 const router = express.Router()
 const allPost = []
-
+// Create
 router.post("/post", (req, res,next)=> {
     if(!req.body.title){ 
        return res.status (404).send({
@@ -24,7 +24,7 @@ router.post("/post", (req, res,next)=> {
     message : "post created successfully",
    })
 })
-
+// Post
 router.get("/post", (req, res,next)=> {
 return res.status(200).send({
     message : "All get post",
@@ -32,6 +32,7 @@ return res.status(200).send({
 })
 
 })
+// Single Post 
 router.get("/post/:postId", (req, res, next) => {
     const postId = req.params.postId
     if (!postId) {
@@ -53,6 +54,7 @@ router.get("/post/:postId", (req, res, next) => {
         data: post
     })
 })
+//Edit
 router.put("/post/:postId", (req, res, next) => {
     const postId = req.params.postId
 
@@ -100,7 +102,7 @@ router.put("/post/:postId", (req, res, next) => {
     })
 
 })
-
+// delete
 router.delete("/post/:postId", (req, res, next) => {
     const postId = req.params.postId
 
