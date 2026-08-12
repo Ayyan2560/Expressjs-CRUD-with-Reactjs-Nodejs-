@@ -1,44 +1,56 @@
 import express from "express"
 
 const router = express.Router()
-const allPost = []
-// Create
-router.post("/post", (req, res,next)=> {
-    if(!req.body.title){ 
-       return res.status (404).send({
-        message : "title can not be empty"
-    })}
 
-    if(!req.body.description){ 
-       return res.status (404).send({
-        message : "description can not be empty"
-    })}
-   const newPost = {
-    title: req.body.title,
-    description: req.body.description,
-    id : new Date().getTime(),
-   }
+let allPosts = []
 
-   allPost.unshift(newPost)
-   res.status(201).send({
-    message : "post created successfully",
-   })
-})
-// Post
-router.get("/post", (req, res,next)=> {
-return res.status(200).send({
-    message : "All get post",
-    data : allPost
+// CREATE POST
+router.post("/post", (req, res, next) => {
+    if (!req.body.title) {
+        return res.status(400).send({
+            message: "title can not be empty"
+        })
+    }
+
+    if (!req.body.description) {
+        return res.status(400).send({
+            message: "description can not be empty"
+        })
+    }
+
+    const newPost = {
+        title: req.body.title,
+        description: req.body.description,
+        id: new Date().getTime(),
+    }
+
+    allPosts.unshift(newPost)
+
+    res.status(201).send({
+        message: "post created successfully",
+    })
 })
 
+
+// GET ALL POSTS
+router.get("/post", (req, res, next) => {
+    return res.status(200).send({
+        message: "All get post",
+        data: allPosts
+    })
 })
-// Single Post 
+
+
+// GET SINGLE POST
 router.get("/post/:postId", (req, res, next) => {
     const postId = req.params.postId
+
     if (!postId) {
         return res.status(400).send({
             message: "post id is required"
-        })}
+        })
+    }
+
     const post = allPosts.find((singlePost) => {
         return singlePost.id == postId
     })
@@ -49,12 +61,14 @@ router.get("/post/:postId", (req, res, next) => {
         })
     }
 
-    res.send({
+    return res.send({
         message: "post fetched",
         data: post
     })
 })
-//Edit
+
+
+// UPDATE POST
 router.put("/post/:postId", (req, res, next) => {
     const postId = req.params.postId
 
@@ -65,7 +79,7 @@ router.put("/post/:postId", (req, res, next) => {
     }
 
     if (!req.body.description) {
-        res.status(400).send({
+        return res.status(400).send({
             message: "description is required"
         })
     }
@@ -87,28 +101,30 @@ router.put("/post/:postId", (req, res, next) => {
     }
 
     const newPosts = allPosts.map((singlePost) => {
-        return singlePost.id == postId ?
-            {
+        return singlePost.id == postId
+            ? {
                 ...singlePost,
                 title: req.body.title,
                 description: req.body.description,
             }
-            : singlePost})
+            : singlePost
+    })
 
     allPosts = newPosts
 
     return res.send({
         message: "post edited"
     })
-
 })
-// delete
+
+
+// DELETE POST
 router.delete("/post/:postId", (req, res, next) => {
     const postId = req.params.postId
 
     if (!postId) {
         return res.status(400).send({
-            messge: "post id is required"
+            message: "post id is required"
         })
     }
 
@@ -131,7 +147,6 @@ router.delete("/post/:postId", (req, res, next) => {
     return res.send({
         message: "post deleted"
     })
-
 })
 
 export default router
